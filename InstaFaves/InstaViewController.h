@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface InstaViewController : UIViewController
-
+@property NSMutableArray *favoritePictures;
 @end

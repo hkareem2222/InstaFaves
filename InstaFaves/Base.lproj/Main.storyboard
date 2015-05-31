@@ -24,13 +24,7 @@
                                     <constraint firstAttribute="height" constant="45" id="sn7-uI-aKy"/>
                                 </constraints>
                                 <items>
-                                    <navigationItem title="My Faves" id="xfI-oL-DJZ">
-                                        <barButtonItem key="rightBarButtonItem" title="Edit" id="gJh-qa-mmq">
-                                            <connections>
-                                                <action selector="onEditButtonTapped:" destination="vXZ-lx-hvc" id="iTF-D5-MPa"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
+                                    <navigationItem title="My Faves" id="xfI-oL-DJZ"/>
                                 </items>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -571,6 +565,7 @@
                                             </mask>
                                         </variation>
                                         <connections>
+                                            <outlet property="heartButton" destination="6R7-2p-1wc" id="Knw-LZ-p4g"/>
                                             <outlet property="imageView" destination="zdi-qs-G29" id="fGj-8F-y92"/>
                                         </connections>
                                     </collectionViewCell>

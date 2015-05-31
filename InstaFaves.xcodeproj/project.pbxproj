@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8548852E1B1BBEC0001F5232 /* Picture.m in Sources */ = {isa = PBXBuildFile; fileRef = 8548852D1B1BBEC0001F5232 /* Picture.m */; };
 		856C4E821B1BA2F700A68AF8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 856C4E811B1BA2F700A68AF8 /* main.m */; };
 		856C4E851B1BA2F700A68AF8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 856C4E841B1BA2F700A68AF8 /* AppDelegate.m */; };
 		856C4E881B1BA2F700A68AF8 /* MyFaveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 856C4E871B1BA2F700A68AF8 /* MyFaveViewController.m */; };
@@ -32,6 +33,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8548852C1B1BBEC0001F5232 /* Picture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Picture.h; sourceTree = "<group>"; };
+		8548852D1B1BBEC0001F5232 /* Picture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Picture.m; sourceTree = "<group>"; };
 		856C4E7C1B1BA2F700A68AF8 /* InstaFaves.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstaFaves.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		856C4E801B1BA2F700A68AF8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		856C4E811B1BA2F700A68AF8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -99,17 +102,19 @@
 			children = (
 				856C4E831B1BA2F700A68AF8 /* AppDelegate.h */,
 				856C4E841B1BA2F700A68AF8 /* AppDelegate.m */,
+				8548852C1B1BBEC0001F5232 /* Picture.h */,
+				8548852D1B1BBEC0001F5232 /* Picture.m */,
 				856C4E861B1BA2F700A68AF8 /* MyFaveViewController.h */,
 				856C4E871B1BA2F700A68AF8 /* MyFaveViewController.m */,
-				856C4EB01B1BB03B00A68AF8 /* InstaCollectionViewCell.h */,
-				856C4EB11B1BB03B00A68AF8 /* InstaCollectionViewCell.m */,
 				856C4EA51B1BA6F300A68AF8 /* FaveCollectionViewCell.h */,
 				856C4EA61B1BA6F300A68AF8 /* FaveCollectionViewCell.m */,
-				856C4EA81B1BA83B00A68AF8 /* MapViewController.h */,
-				856C4EA91B1BA83B00A68AF8 /* MapViewController.m */,
-				856C4E891B1BA2F700A68AF8 /* Main.storyboard */,
 				856C4EAD1B1BAC0900A68AF8 /* InstaViewController.h */,
 				856C4EAE1B1BAC0900A68AF8 /* InstaViewController.m */,
+				856C4EB01B1BB03B00A68AF8 /* InstaCollectionViewCell.h */,
+				856C4EB11B1BB03B00A68AF8 /* InstaCollectionViewCell.m */,
+				856C4E891B1BA2F700A68AF8 /* Main.storyboard */,
+				856C4EA81B1BA83B00A68AF8 /* MapViewController.h */,
+				856C4EA91B1BA83B00A68AF8 /* MapViewController.m */,
 				856C4E8C1B1BA2F700A68AF8 /* Images.xcassets */,
 				856C4E8E1B1BA2F700A68AF8 /* LaunchScreen.xib */,
 				856C4E7F1B1BA2F700A68AF8 /* Supporting Files */,
@@ -243,6 +248,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8548852E1B1BBEC0001F5232 /* Picture.m in Sources */,
 				856C4EA71B1BA6F300A68AF8 /* FaveCollectionViewCell.m in Sources */,
 				856C4E881B1BA2F700A68AF8 /* MyFaveViewController.m in Sources */,
 				856C4EAA1B1BA83B00A68AF8 /* MapViewController.m in Sources */,
@@ -444,6 +450,7 @@
 				856C4EA11B1BA2F700A68AF8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		856C4EA21B1BA2F700A68AF8 /* Build configuration list for PBXNativeTarget "InstaFavesTests" */ = {
 			isa = XCConfigurationList;
@@ -452,6 +459,7 @@
 				856C4EA41B1BA2F700A68AF8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
