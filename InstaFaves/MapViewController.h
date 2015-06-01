@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface MapViewController : UIViewController
-
+@property NSArray *longitudes;
+@property NSArray *latitudes;
 @end

@@ -17,6 +17,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.mapView.delegate = self;
+    NSLog(@"lat count: %li", self.latitudes.count);
+    NSLog(@"long count: %li", self.longitudes.count);
 }
 @end

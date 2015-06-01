@@ -57,7 +57,7 @@
                                 </variation>
                                 <connections>
                                     <action selector="onSeeMapButtonTapped:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="1cq-rj-szj"/>
-                                    <segue destination="Vau-c6-w8d" kind="show" id="r6R-kr-Wl3"/>
+                                    <segue destination="Vau-c6-w8d" kind="show" identifier="toMap" id="r6R-kr-Wl3"/>
                                 </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="GH1-Di-ver">

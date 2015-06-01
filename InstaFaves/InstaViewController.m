@@ -19,6 +19,8 @@
 @property NSMutableArray *pictureImages;
 @property NSMutableArray *pictureURLs;
 @property UIButton *selectedCellButton;
+@property NSMutableArray *longitudes;
+@property NSMutableArray *latitudes;
 @end
 
 @implementation InstaViewController
@@ -59,8 +61,22 @@
 -(void)addToPictureObject:(NSArray *)array {
     self.pictureImages = [NSMutableArray new];
     self.pictureURLs = [NSMutableArray new];
+    self.latitudes = [NSMutableArray new];
+    self.longitudes = [NSMutableArray new];
+
     for (NSDictionary *imagesDictionary in array) {
         NSDictionary *imageURLDictionary = [imagesDictionary objectForKey:@"images"];
+        NSDictionary *locationDictionary = [imagesDictionary objectForKey:@"location"];
+        if (![locationDictionary isKindOfClass:[NSNull class]]) {
+            NSNumber *latitude = [locationDictionary objectForKey:@"latitude"];
+            [self.latitudes addObject:latitude];
+            NSNumber *longitude = [locationDictionary objectForKey:@"longitude"];
+            [self.longitudes addObject:longitude];
+        } else {
+            NSNumber *zero = @0;
+            [self.latitudes addObject:zero];
+            [self.longitudes addObject:zero];
+        }
         NSDictionary *standardResolutionDictionary = [imageURLDictionary objectForKey:@"standard_resolution"];
         NSString *urlString = [standardResolutionDictionary objectForKey:@"url"];
         [self.pictureURLs addObject:urlString];
@@ -90,7 +106,8 @@
     //adding selected cell to object
     Picture *picture = [Picture new];
     picture.imageURLString = self.pictureURLs[indexPath.row];
-    //set picture object latitiude and longitude here
+    picture.latitude = self.latitudes[indexPath.row];
+    picture.longitude = self.longitudes[indexPath.row];
     [self.favoritePictures addObject:picture];
     NSLog(@"favorite pics count: %li", self.favoritePictures.count);
 

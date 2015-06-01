@@ -10,12 +10,15 @@
 #import "FaveCollectionViewCell.h"
 #import "InstaViewController.h"
 #import "Picture.h"
+#import "MapViewController.h"
 
 @interface MyFaveViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITabBarDelegate>
 @property (weak, nonatomic) IBOutlet UINavigationBar *navBar;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UITabBar *tabBar;
 @property NSMutableArray *pictureURLStrings;
+@property NSMutableArray *pictureLatitudes;
+@property NSMutableArray *pictureLongitudes;
 @property UIButton *deleteButtonOnCell;
 @property UIButton *shareButtonOnCell;
 @property BOOL isEditable;
@@ -84,13 +87,18 @@
 
 -(IBAction)unwindToMyFaves:(UIStoryboardSegue *)segue {
     //from MapViewController && from InstaViewController
-    InstaViewController *instaVC = segue.sourceViewController;
-    for (Picture *picture in instaVC.favoritePictures) {
-        [self.pictureURLStrings addObject:picture.imageURLString];
+
+    if ([segue.identifier isEqualToString:@"unwindToMyFaves"]) {
+        InstaViewController *instaVC = segue.sourceViewController;
+        for (Picture *picture in instaVC.favoritePictures) {
+            [self.pictureURLStrings addObject:picture.imageURLString];
+            [self.pictureLatitudes addObject:picture.latitude];
+            [self.pictureLongitudes addObject:picture.longitude];
+        }
+        [self save];
+        [self load];
+        NSLog(@"unwind url count: %li", self.pictureURLStrings.count);
     }
-    [self save];
-    [self load];
-    NSLog(@"unwind url count: %li", self.pictureURLStrings.count);
 
 }
 
@@ -100,19 +108,44 @@
     }
 }
 
-#pragma mark - PLIST Stuff
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"toMap"]) {
+        MapViewController *mapVC = [segue destinationViewController];
+        mapVC.latitudes = self.pictureLatitudes;
+        mapVC.longitudes = self.pictureLongitudes;
+    }
+}
 
+#pragma mark - PLIST Stuff
+//CONVERT TO USER DEFAULTS
 -(void)load{
-    NSURL *plist = [[self documentsDirectory] URLByAppendingPathComponent:@"pastes.plist"];
-    self.pictureURLStrings = [NSMutableArray arrayWithContentsOfURL:plist] ?: [NSMutableArray new];
-    NSLog(@"load count: %li", self.pictureURLStrings.count);
+    //loading url
+    NSURL *plistURL = [[self documentsDirectory] URLByAppendingPathComponent:@"pastes.plist"];
+    self.pictureURLStrings = [NSMutableArray arrayWithContentsOfURL:plistURL] ?: [NSMutableArray new];
+
+    //loading latitude
+    NSURL *plistLatitude = [[self documentsDirectory] URLByAppendingPathComponent:@"pastesLatitude.plist"];
+    self.pictureLatitudes = [NSMutableArray arrayWithContentsOfURL:plistLatitude] ?: [NSMutableArray new];
+
+    //loading longitude
+    NSURL *plistLongitude = [[self documentsDirectory] URLByAppendingPathComponent:@"pastesLongitude.plist"];
+    self.pictureLongitudes = [NSMutableArray arrayWithContentsOfURL:plistLongitude] ?: [NSMutableArray new];
+
     [self.collectionView reloadData];
 }
 
 -(void)save {
-    NSURL *plist = [[self documentsDirectory] URLByAppendingPathComponent:@"pastes.plist"];
-    [self.pictureURLStrings writeToURL:plist atomically:YES];
-    NSLog(@"save count: %li", self.pictureURLStrings.count);
+    //saving url
+    NSURL *plistURL = [[self documentsDirectory] URLByAppendingPathComponent:@"pastes.plist"];
+    [self.pictureURLStrings writeToURL:plistURL atomically:YES];
+
+    //saving latitude
+    NSURL *plistLatitude = [[self documentsDirectory] URLByAppendingPathComponent:@"pastesLatitude.plist"];
+    [self.pictureLatitudes writeToURL:plistLatitude atomically:YES];
+
+    //saving longitude
+    NSURL *plistLongitude = [[self documentsDirectory] URLByAppendingPathComponent:@"pastesLongitude.plist"];
+    [self.pictureLongitudes writeToURL:plistLongitude atomically:YES];
 }
 
 -(NSURL *)documentsDirectory {
