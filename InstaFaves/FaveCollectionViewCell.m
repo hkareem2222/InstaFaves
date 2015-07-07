@@ -11,8 +11,11 @@
 @implementation FaveCollectionViewCell
 
 - (IBAction)onDeleteButtonTapped:(UIButton *)sender {
+    NSLog(@"called inside");
+    [self.delegate faveCollectionViewCell:self didTapDeleteButton:sender];
 }
 - (IBAction)onShareButtonTapped:(UIButton *)sender {
+    [self.delegate faveCollectionViewCell:self didTapShareButton:sender];
 }
 
 @end

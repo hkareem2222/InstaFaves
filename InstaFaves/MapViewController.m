@@ -28,9 +28,16 @@
             coord.latitude = [self.latitudes[i] doubleValue];
             MKPointAnnotation *annotation = [MKPointAnnotation new];
             annotation.coordinate = CLLocationCoordinate2DMake(coord.latitude, coord.longitude);
-//            annotation.title =
+            annotation.title = self.pictureURLs[i];
             [self.mapView addAnnotation:annotation];
         }
     }
+}
+
+-(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+    MKPinAnnotationView *pin = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:nil];
+    pin.canShowCallout = YES;
+    pin.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    return pin;
 }
 @end

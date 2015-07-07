@@ -10,17 +10,18 @@
 #import "InstaCollectionViewCell.h"
 #import "Picture.h"
 
-@interface InstaViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UITabBarDelegate>
-@property (weak, nonatomic) IBOutlet UISearchBar *userSearchBar;
+@interface InstaViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UITabBarDelegate, UISearchBarDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UITabBar *tabBar;
 @property (weak, nonatomic) IBOutlet UISearchBar *tagSearchBar;
+@property (weak, nonatomic) IBOutlet UIButton *searchButton;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property NSMutableArray *pictureImages;
 @property NSMutableArray *pictureURLs;
 @property UIButton *selectedCellButton;
 @property NSMutableArray *longitudes;
 @property NSMutableArray *latitudes;
+@property BOOL isSearchableByTags;
 @end
 
 @implementation InstaViewController
@@ -29,6 +30,9 @@
     [super viewDidLoad];
     [self.tabBar setSelectedItem:self.tabBar.items[1]];
     self.tabBar.delegate = self;
+    self.tagSearchBar.delegate = self;
+    self.isSearchableByTags = YES;
+    self.searchButton.titleLabel.text = @"Search by tags";
     self.favoritePictures = [NSMutableArray new];
 
     //sets searchbar to clear but then background turns black? from collectionview
@@ -39,10 +43,6 @@
     //two parameters, customize by user input later, count & tags
     NSURL *url = [NSURL URLWithString:@"https://api.instagram.com/v1/tags/cars/media/recent?count=10&client_id=3acb27e236ad40d59bf2a83ae1bb9771"];
     [self apiCalled:url];
-}
-
-- (IBAction)onSearchButtonTapped:(UIButton *)button {
-
 }
 
 #pragma mark - API and storage of data
@@ -67,7 +67,8 @@
     for (NSDictionary *imagesDictionary in array) {
         NSDictionary *imageURLDictionary = [imagesDictionary objectForKey:@"images"];
         NSDictionary *locationDictionary = [imagesDictionary objectForKey:@"location"];
-        if (![locationDictionary isKindOfClass:[NSNull class]]) {
+        NSLog(@"location: %@", locationDictionary);
+        if (![locationDictionary isEqual:[NSNull null]]) {
             NSNumber *latitude = [locationDictionary objectForKey:@"latitude"];
             [self.latitudes addObject:latitude];
             NSNumber *longitude = [locationDictionary objectForKey:@"longitude"];
@@ -86,6 +87,30 @@
     [self.collectionView reloadData];
     [self.activityIndicator stopAnimating];
 }
+
+#pragma mark - Search Bar
+
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    [searchBar resignFirstResponder];
+    if (self.isSearchableByTags) {
+        NSString *searchText = searchBar.text;
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.instagram.com/v1/tags/%@/media/recent?count=10&client_id=3acb27e236ad40d59bf2a83ae1bb9771", searchText]];
+        [self apiCalled:url];
+    } else {
+    }
+}
+- (IBAction)onSearchButtonTapped:(UIButton *)button {
+    if ([button.titleLabel.text isEqualToString:@"Search by tags"]) {
+        [button setTitle:@"Search by users" forState:UIControlStateNormal];
+        self.isSearchableByTags = NO;
+    } else {
+        self.isSearchableByTags = YES;
+        [button setTitle:@"Search by tags" forState:UIControlStateNormal];
+    }
+}
+
+
+
 
 #pragma mark - CollectionView
 
@@ -113,23 +138,14 @@
 
     //animating UIButton on cell for favorite
     self.selectedCellButton = cell.heartButton;
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
 
-    [UIView setAnimationDelegate:self];
-//    [UIView setAnimationDuration:0.01];
-    cell.heartButton.alpha = 0.6;
-
-    //calling animationDidStop
-    [UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
-    [UIView commitAnimations];
-}
-
--(void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished    context:(void *)context {
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:1];
-    self.selectedCellButton.alpha = 0.0;
-    [UIView commitAnimations];
+    [UIView animateWithDuration:1.0 animations:^{
+        cell.heartButton.alpha = 0.6;
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:1.0 animations:^{
+            cell.heartButton.alpha = 0.0;
+        }];
+    }];
 }
 
 #pragma mark - Segue Stuff

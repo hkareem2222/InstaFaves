@@ -11,8 +11,9 @@
 #import "InstaViewController.h"
 #import "Picture.h"
 #import "MapViewController.h"
+#import <MessageUI/MessageUI.h>
 
-@interface MyFaveViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITabBarDelegate>
+@interface MyFaveViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITabBarDelegate, FaveCollectionViewCellDelegate, MFMailComposeViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UINavigationBar *navBar;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UITabBar *tabBar;
@@ -49,7 +50,7 @@
 
 -(FaveCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     FaveCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ImageID" forIndexPath:indexPath];
-
+    cell.delegate = self;
     //speed up scroll by doing what you did in other view controller
     cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:self.pictureURLStrings[indexPath.row]]]];
     cell.deleteButton.alpha = 0.0;
@@ -66,22 +67,50 @@
         //animating UIButton on cell for favorite
         self.deleteButtonOnCell = cell.deleteButton;
         self.shareButtonOnCell = cell.shareButton;
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
 
-        [UIView setAnimationDelegate:self];
-        //    [UIView setAnimationDuration:0.01];
-        cell.deleteButton.alpha = 1.0;
-        cell.shareButton.alpha = 1.0;
+        [UIView animateWithDuration:1.0 animations:^{
+            cell.deleteButton.alpha = 1.0;
+            cell.shareButton.alpha = 1.0;
+        }];
 
     } else {
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:1];
-        self.deleteButtonOnCell.alpha = 0.0;
-        self.shareButtonOnCell.alpha = 0.0;
-        [UIView commitAnimations];
+        [UIView animateWithDuration:1.0 animations:^{
+            cell.deleteButton.alpha = 0.0;
+            cell.shareButton.alpha = 0.0;
+        }];
+
     }
 }
+
+-(void)faveCollectionViewCell:(FaveCollectionViewCell *)cell didTapDeleteButton:(UIButton *)button {
+    NSLog(@"called");
+    [self.pictureURLStrings removeObjectAtIndex:[[self.collectionView indexPathForCell:cell] row]];
+    [self.pictureLatitudes removeObjectAtIndex:[[self.collectionView indexPathForCell:cell] row]];
+    [self.pictureLongitudes removeObjectAtIndex:[[self.collectionView indexPathForCell:cell] row]];
+    cell.deleteButton.alpha = 0.0;
+    cell.shareButton.alpha = 0.0;
+    [self save];
+    [self.collectionView reloadData];
+}
+
+-(void)faveCollectionViewCell:(FaveCollectionViewCell *)cell didTapShareButton:(UIButton *)button {
+
+
+//    NSString *text = @"How to add Facebook and Twitter sharing to an iOS app";
+//    NSURL *url = [NSURL URLWithString:@"http://roadfiresoftware.com/2014/02/how-to-add-facebook-and-twitter-sharing-to-an-ios-app/"];
+    UIImage *image = cell.imageView.image;
+
+    UIActivityViewController *controller =
+    [[UIActivityViewController alloc]
+     initWithActivityItems:@[image]
+     applicationActivities:nil];
+
+    [self presentViewController:controller animated:YES completion:nil];
+    cell.deleteButton.alpha = 0.0;
+    cell.shareButton.alpha = 0.0;
+}
+
+
 
 #pragma mark - Segue Stuff
 
@@ -113,6 +142,7 @@
         MapViewController *mapVC = [segue destinationViewController];
         mapVC.latitudes = self.pictureLatitudes;
         mapVC.longitudes = self.pictureLongitudes;
+        mapVC.pictureURLs = self.pictureURLStrings;
     }
 }
 
@@ -151,5 +181,4 @@
 -(NSURL *)documentsDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
 }
-
 @end
